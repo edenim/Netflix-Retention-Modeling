@@ -189,11 +189,15 @@ Evaluation metrics:
 - PR-AUC = **0.870**
 - F1 Score = **0.709**
 
-### ROC Curve
-![ROC Curve Comparison](outputs/roc_curve_comparison.png)
+### ROC Curve  
+<p align="center">
+  <img src="outputs/roc_curve_comparison.png" width="500">
+</p>
 
-### Confusion Matrix
-![Best Model Confusion Matrix](outputs/best_model_confusion_matrix.png)
+### Confusion Matrix  
+<p align="center">
+  <img src="outputs/best_model_confusion_matrix.png" width="500">
+</p>
 
 ---
 
