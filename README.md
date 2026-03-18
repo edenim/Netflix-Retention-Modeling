@@ -157,16 +157,16 @@ Raw session-level data was aggregated into user-level features to capture long-t
 
 ### Engineered Features
 
-| Feature | How it was created | Why it matters |
-|--------|------------------|----------------|
-| `session_frequency` | Total sessions / active days | Measures consistency of user engagement |
-| `completion_ratio` | Completed sessions / total sessions | Captures how fully users consume content |
-| `recency_days` | Days since last activity | Strong indicator of churn risk |
-| `genre_diversity` | Number of unique genres watched | Reflects breadth of content preference |
-| `avg_watch_time` | Average watch duration per session | Indicates engagement intensity |
-| `movie_ratio` | Movie sessions / total sessions | Captures content type preference |
-| `original_ratio` | Netflix original sessions / total sessions | Measures platform-specific preference |
-| `device_diversity` | Number of unique devices used | Indicates cross-device engagement |
+| Feature | Importance | How it was created | Why it matters |
+|--------|-----------|------------------|----------------|
+| `recency_days` | High | Days since last activity | Strong indicator of churn risk |
+| `session_frequency` | High | Total sessions / active days | Measures consistency of user engagement |
+| `completion_ratio` | High | Completed sessions / total sessions | Captures how fully users consume content |
+| `genre_diversity` | Medium | Number of unique genres watched | Reflects breadth of content preference |
+| `avg_watch_time` | Medium | Average watch duration per session | Indicates engagement intensity |
+| `device_diversity` | Low-Medium | Number of unique devices used | Indicates cross-device engagement |
+| `movie_ratio` | Low | Movie sessions / total sessions | Captures content type preference |
+| `original_ratio` | Low | Netflix original sessions / total sessions | Measures platform-specific preference |
 
 ---
 
