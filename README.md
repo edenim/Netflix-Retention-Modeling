@@ -1,164 +1,229 @@
-# 🎬 Netflix Retention Modeling
-
+# Netflix Retention Modeling
 > Predicting user churn from behavioral patterns using Logistic Regression and Random Forest
 
-![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=flat&logo=python&logoColor=white)
-![Pandas](https://img.shields.io/badge/Pandas-2.0+-150458?style=flat&logo=pandas&logoColor=white)
-![Scikit-learn](https://img.shields.io/badge/Scikit--learn-1.3+-F7931E?style=flat&logo=scikit-learn&logoColor=white)
-![Status](https://img.shields.io/badge/Status-In%20Progress-yellow?style=flat)
+![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python&logoColor=white)
+![Pandas](https://img.shields.io/badge/Pandas-2.0+-150458?logo=pandas&logoColor=white)
+![Scikit-learn](https://img.shields.io/badge/Scikit--learn-1.3+-F7931E?logo=scikit-learn&logoColor=white)
+![Status](https://img.shields.io/badge/Status-In%20Progress-yellow)
 
 ---
 
 ## Overview
 
-Netflix loses subscribers when engagement drops — but churn often becomes visible too late. This project builds a **behavioral churn prediction model** using session-level watch history to identify at-risk users before they leave.
+Streaming platforms often detect churn only **after** engagement has already declined.  
+This project builds a **behavioral churn prediction model** using Netflix watch session data to identify users who are likely to stop using the platform.
 
-Key questions addressed:
+By transforming **session-level watch activity into user-level behavioral features**, we train machine learning models to predict churn risk.
+
+### Key Questions
 - Which engagement signals best predict churn?
 - How early can we detect declining retention?
-- Can simple models (Logistic Regression) compete with ensemble methods (Random Forest)?
-
----
-
-## Dataset
-
-- **Source**: [Kaggle](https://www.kaggle.com/) — Netflix user watch history
-- **Size**: 105,000 sessions across 10,000 users
-- **Period**: Jan 2024 – Dec 2025
-- **Key columns**: `user_id`, `watch_date`, `watch_duration_minutes`, `completion_rate`, `action`, `genre_primary`, `content_type`, `device_type`
-
----
-
-## Methodology
-
-### 1. Data Cleaning & Column Selection
-Removed redundant and low-quality columns:
-- `progress_percentage` — exact duplicate of `completion_rate` (correlation = 1.0)
-- `watch_ratio` — derived column computable from existing features
-- `user_rating` — 79.9% missing, high selection bias
-- `session_id` — identifier only
-
-### 2. Churn Label Definition
-A user is labeled **churned = 1** if their last watch activity was **30+ days** before the reference date (2025-12-31).
-
-```python
-reference_date = df['watch_date'].max()
-last_watch = df.groupby('user_id')['watch_date'].max()
-recency_days = (reference_date - last_watch).dt.days
-churned = (recency_days >= 30).astype(int)
-# Result: 65.4% churned / 34.6% retained
-```
-
-### 3. Feature Engineering
-Aggregated session-level data to **user-level** (1 row per user):
-
-| Feature | Description |
-|---|---|
-| `total_sessions` | Total number of watch sessions |
-| `total_watch_time` | Cumulative watch time (minutes) |
-| `avg_watch_time` | Average session duration (minutes) |
-| `avg_completion_rate` | Mean content completion rate (0–1) |
-| `recency_days` | Days since last watch activity |
-| `active_days` | Days between first and last watch |
-| `session_frequency` | Sessions per active day |
-| `genre_diversity` | Number of distinct genres watched |
-| `completion_ratio` | Proportion of fully completed sessions |
-| `movie_ratio` | Share of Movie vs TV Series sessions |
-| `device_diversity` | Number of distinct devices used |
-
-```python
-user_features = df.groupby('user_id').agg(
-    total_sessions       = ('session_id', 'count'),
-    total_watch_time     = ('watch_duration_minutes', 'sum'),
-    avg_watch_time       = ('watch_duration_minutes', 'mean'),
-    avg_completion_rate  = ('completion_rate', 'mean'),
-    last_watch_date      = ('watch_date', 'max'),
-    first_watch_date     = ('watch_date', 'min'),
-    genre_diversity      = ('genre_primary', 'nunique'),
-    n_movies             = ('content_type', lambda x: (x == 'Movie').sum()),
-    n_completed          = ('action', lambda x: (x == 'completed').sum()),
-    device_diversity     = ('device_type', 'nunique'),
-).reset_index()
-
-user_features['recency_days']      = (reference_date - user_features['last_watch_date']).dt.days
-user_features['active_days']       = (user_features['last_watch_date'] - user_features['first_watch_date']).dt.days + 1
-user_features['session_frequency'] = user_features['total_sessions'] / user_features['active_days']
-user_features['completion_ratio']  = user_features['n_completed'] / user_features['total_sessions']
-user_features['movie_ratio']       = user_features['n_movies'] / user_features['total_sessions']
-user_features['churned']           = (user_features['recency_days'] >= 30).astype(int)
-```
-
-### 4. Modeling *(in progress)*
-- Logistic Regression with `class_weight='balanced'`
-- Random Forest with `class_weight='balanced'`
-- Cross-validation: StratifiedKFold (k=5)
-- Evaluation: ROC-AUC, F1-score, Precision-Recall
-
----
-
-## Results
-
-> 🚧 To be updated after model training
-
-| Model | ROC-AUC | F1 (Churn) | Precision | Recall |
-|---|---|---|---|---|
-| Baseline (majority class) | — | — | — | — |
-| Logistic Regression | — | — | — | — |
-| Random Forest | — | — | — | — |
+- Do simple models (Logistic Regression) perform competitively with ensemble methods (Random Forest)?
 
 ---
 
 ## Project Structure
 
 ```
-netflix-retention-modeling/
+Netflix-Retention-Modeling
 │
-├── data/
-│   └── watch_joined.csv          # Raw dataset (from Kaggle)
+├── data
+│   ├── watch_history.csv
+│   ├── movies.csv
+│   ├── watch_joined.csv
+│   ├── watch_preprocessed.csv
+│   └── user_features.csv
 │
-├── notebooks/
-│   ├── 01_eda.ipynb              # Exploratory Data Analysis
-│   ├── 02_feature_engineering.ipynb  # User-level feature creation
-│   └── 03_modeling.ipynb         # Model training & evaluation
+├── outputs
+│   ├── model_performance.csv
+│   ├── roc_curve_comparison.png
+│   ├── best_model_confusion_matrix.png
+│   └── test_predictions.csv
 │
-├── requirements.txt
+├── src
+│   ├── 00_data_preparation.py
+│   ├── 01_eda.py
+│   ├── 02_preprocessing.py
+│   ├── 03_feature_engineering.py
+│   └── 04_modeling.py
+│
 └── README.md
 ```
 
----
+## Dataset
 
-## Setup & Usage
+**Source:** Kaggle — Netflix User Watch History
 
-```bash
-# 1. Clone the repo
-git clone https://github.com/YOUR_USERNAME/netflix-retention-modeling.git
-cd netflix-retention-modeling
+| Property | Details |
+|----------|---------|
+| Watch Sessions | ~105,000 |
+| Users | ~10,000 |
+| Time Period | Jan 2024 – Dec 2025 |
 
-# 2. Install dependencies
-pip install -r requirements.txt
+### Key Columns
 
-# 3. Run notebooks in order
-jupyter notebook notebooks/
-```
-
-**requirements.txt**
-```
-pandas>=2.0
-numpy>=1.24
-scikit-learn>=1.3
-matplotlib>=3.7
-seaborn>=0.12
-jupyter
-```
+| Column | Description |
+|--------|-------------|
+| `user_id` | Unique user identifier |
+| `watch_date` | Date of watch session |
+| `watch_duration_minutes` | Minutes watched |
+| `completion_rate` | Percentage of content watched |
+| `action` | Whether content was completed |
+| `genre_primary` | Primary content genre |
+| `content_type` | Movie vs TV Series |
+| `device_type` | Device used for viewing |
 
 ---
 
-## Key Findings *(preliminary)*
+## Methodology
+
+```
+Raw Data → EDA → Preprocessing → Feature Engineering → Model Training → Evaluation
+```
+
+---
+
+### 1. Exploratory Data Analysis
+
+EDA was conducted to understand data quality and user engagement patterns.
+
+- Missing value analysis
+- Watch duration distribution
+- Genre and device usage distribution
+- Session activity per user
+- Initial churn ratio exploration
+
+---
+
+### 2. Data Preprocessing
+
+Columns removed due to redundancy or poor data quality:
+
+| Column | Reason |
+|--------|--------|
+| `progress_percentage` | Duplicate of `completion_rate` |
+| `watch_ratio` | Derived column |
+| `user_rating` | 79.9% missing values |
+| `genre_secondary` | 64% missing values |
+| `session_id` | Identifier only |
+
+**Outlier Removal** — Watch duration anomalies filtered using:
+```python
+watch_duration_minutes / duration_minutes < 3
+```
+
+**Missing Values** — Replaced using median imputation.
+
+---
+
+### 3. Churn Definition
+
+A user is labeled **churned** if they have **no watch activity within the last 30 days** of the dataset.
+
+```python
+reference_date = df['watch_date'].max()
+last_watch = df.groupby('user_id')['watch_date'].max()
+recency_days = (reference_date - last_watch).dt.days
+churned = (recency_days >= 30).astype(int)
+```
+
+| Label | Share |
+|-------|-------|
+| Churned | ~65% |
+| Retained | ~35% |
+
+---
+
+### 4. Feature Engineering
+
+Session-level viewing data was aggregated into user-level behavioral features.
+
+| Feature | Description |
+|---------|-------------|
+| `total_sessions` | Total watch sessions |
+| `total_watch_time` | Total minutes watched |
+| `avg_watch_time` | Average session length |
+| `avg_completion_rate` | Mean completion rate |
+| `recency_days` | Days since last watch |
+| `active_days` | Days between first and last activity |
+| `session_frequency` | Sessions per active day |
+| `genre_diversity` | Number of genres watched |
+| `device_diversity` | Number of devices used |
+| `completion_ratio` | Share of completed sessions |
+| `movie_ratio` | Movie viewing share |
+| `original_ratio` | Netflix original share |
+
+> Output: `user_features.csv`
+
+---
+
+### 5. Modeling
+
+Three models were trained and compared:
+
+- Baseline (Most Frequent)
+- Logistic Regression
+- Random Forest
+
+Evaluation metrics:
+
+- Accuracy
+- Precision
+- Recall
+- F1 Score
+- ROC-AUC
+- PR-AUC
+
+---
+
+## Results
+
+| Model | Accuracy | Precision | Recall | F1 | ROC-AUC | PR-AUC |
+|------|------|------|------|------|------|------|
+| Logistic Regression | 0.668 | **0.859** | 0.604 | 0.709 | **0.802** | **0.870** |
+| Random Forest | **0.762** | 0.783 | **0.891** | **0.833** | 0.780 | 0.847 |
+| Baseline | 0.669 | 0.669 | 1.000 | 0.802 | 0.500 | 0.669 |
+
+**Best Model:** Logistic Regression  
+- ROC-AUC = **0.802**
+- PR-AUC = **0.870**
+- F1 Score = **0.709**  
+
+---
+
+## Key Insights
+
+- User engagement patterns strongly predict churn risk.
+- Session frequency and completion behavior are important indicators of retention.
+- Logistic Regression achieved the best ranking performance (ROC-AUC).
+- Random Forest achieved the highest recall and F1 score.
+
+## Key Findings (Preliminary)
 
 - **Session frequency** is the strongest early signal of churn risk
-- Users who stop completing content (low `completion_ratio`) churn at higher rates
-- Genre diversity correlates with longer retention
-
+- Users with declining `completion_ratio` are more likely to churn
+- **Genre diversity** tends to increase long-term retention
+- Longer inactivity (`recency_days`) strongly indicates churn risk
 ---
 
-*Dec 2025 – Present · University of Wisconsin–Madison*
+## Setup
+
+**1. Clone the repository**
+```bash
+git clone https://github.com/YOUR_USERNAME/netflix-retention-modeling.git
+cd netflix-retention-modeling
+```
+
+**2. Install dependencies**
+```bash
+pip install -r requirements.txt
+```
+
+**3. Run the pipeline in order**
+```bash
+python scripts/00_data_preparation.py
+python scripts/01_eda.py
+python scripts/02_preprocessing.py
+python scripts/03_feature_engineering.py
+python scripts/04_modeling.py
+```
