@@ -229,14 +229,10 @@ The model correctly identifies a large portion of churn users (high recall), but
 
 → Overall, declining engagement is the strongest signal of potential churn
 
----
-
 ### Project Goal
 
 The primary goal of this project is not only to predict churn,  
 but to generate actionable insights that can be applied in real-world retention strategies.
-
----
 
 ### Business Implications
 
