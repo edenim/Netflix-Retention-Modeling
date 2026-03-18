@@ -210,18 +210,6 @@ The confusion matrix summarizes the model’s predictions by comparing actual vs
 
 **Key insight:**  
 The model correctly identifies a large portion of churn users (high recall), but some non-churn users are misclassified, suggesting a trade-off between precision and recall.>
-
-### Feature Importance  
-<p align="center">
-  <img src="outputs/feature_importance.png" width="500">
-</p>
-
-**What this shows:**  
-This plot highlights which features contribute most to the model’s predictions.
-
-**Key insight:**  
-Engagement-related features such as session frequency, completion ratio, and recency are the strongest indicators of churn risk.
-
 ---
 
 ## Key Insights
