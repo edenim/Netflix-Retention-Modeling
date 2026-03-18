@@ -62,16 +62,10 @@ Netflix-Retention-Modeling
 
 ### Key Columns
 
-| Column | Description |
-|--------|-------------|
-| `user_id` | Unique user identifier |
-| `watch_date` | Date of watch session |
-| `watch_duration_minutes` | Minutes watched |
-| `completion_rate` | Percentage of content watched |
-| `action` | Indicates the viewing outcome of a session |
-| `genre_primary` | Primary content genre |
-| `content_type` | Movie vs TV Series |
-| `device_type` | Device used for viewing |
+- `user_id`: unique user identifier  
+- `watch_date`: timestamp of viewing  
+- `action`: indicates whether content was completed  
+- `genre_primary`: main genre 
 
 ---
 
