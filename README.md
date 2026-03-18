@@ -68,7 +68,7 @@ Netflix-Retention-Modeling
 | `watch_date` | Date of watch session |
 | `watch_duration_minutes` | Minutes watched |
 | `completion_rate` | Percentage of content watched |
-| `action` | Whether content was completed |
+| `action` | Indicates the viewing outcome of a session |
 | `genre_primary` | Primary content genre |
 | `content_type` | Movie vs TV Series |
 | `device_type` | Device used for viewing |
@@ -187,7 +187,13 @@ Evaluation metrics:
 **Best Model:** Logistic Regression  
 - ROC-AUC = **0.802**
 - PR-AUC = **0.870**
-- F1 Score = **0.709**  
+- F1 Score = **0.709**
+
+### ROC Curve
+![ROC Curve Comparison](outputs/roc_curve_comparison.png)
+
+### Confusion Matrix
+![Best Model Confusion Matrix](outputs/best_model_confusion_matrix.png)
 
 ---
 
