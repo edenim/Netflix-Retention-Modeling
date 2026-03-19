@@ -87,8 +87,6 @@ EDA was conducted to understand data quality and user engagement patterns.
 - Session activity per user
 - Initial churn ratio exploration
 
-![EDA Overview](outputs/01_eda_overview.png)
-
 ---
 
 ### 2. Data Preprocessing
