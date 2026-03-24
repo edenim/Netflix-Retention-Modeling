@@ -15,6 +15,10 @@ This project builds a **behavioral churn prediction model** using Netflix watch 
 
 By transforming **session-level watch activity into user-level behavioral features**, we train machine learning models to predict churn risk.
 
+## Notebook
+
+📓 [View Full Pipeline Notebook](https://nbviewer.org/github/edbacks/Netflix_churnprediction_project/blob/main/src/netflix_churn_prediction.ipynb)
+
 ### Key Questions
 - Which engagement signals best predict churn?
 - How early can we detect declining retention?
