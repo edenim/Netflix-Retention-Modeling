@@ -42,11 +42,8 @@ Netflix-Retention-Modeling
 │   └── test_predictions.csv
 │
 ├── src
-│   ├── 00_data_preparation.py
-│   ├── 01_eda.py
-│   ├── 02_preprocessing.py
-│   ├── 03_feature_engineering.py
-│   └── 04_modeling.py
+│   ├── netflix_churn_prediction.ipynb
+│  
 │
 └── README.md
 ```
