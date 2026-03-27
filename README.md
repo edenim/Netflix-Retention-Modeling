@@ -42,7 +42,7 @@ Netflix-Retention-Modeling
 │   └── test_predictions.csv
 │
 ├── src
-│   ├── netflix_churn_prediction.ipynb
+│   └──  netflix_churn_prediction.ipynb
 │  
 │
 └── README.md
