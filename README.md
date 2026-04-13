@@ -156,7 +156,7 @@ Raw session-level data was aggregated into user-level features to capture long-t
 | `completion_ratio` | High | Completed sessions / total sessions | Captures how fully users consume content |
 | `genre_diversity` | Medium | Number of unique genres watched | Reflects breadth of content preference |
 | `avg_watch_time` | Medium | Average watch duration per session | Indicates engagement intensity |
-| `device_diversity` | Low-Medium | Number of unique devices used | Indicates cross-device engagement |
+| `device_diversity` | Low | Number of unique devices used | Indicates cross-device engagement |
 | `movie_ratio` | Low | Movie sessions / total sessions | Captures content type preference |
 | `original_ratio` | Low | Netflix original sessions / total sessions | Measures platform-specific preference |
 
